@@ -34,6 +34,7 @@ setup(
         'Programming Language :: Python :: 3 :: Only',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
+    python_requires='>=3.5',
     setup_requires=['pytest-runner'],
     tests_require=['pytest', 'pytest-asyncio']
 )
