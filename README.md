@@ -103,6 +103,7 @@ async def foo(n):
 for i in range(5):
     await throttle
     await foo(i)
+    throttle.release()
 
 # 0 1563275828.253736
 # 1 1563275829.2547996
