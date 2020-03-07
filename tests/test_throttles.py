@@ -64,25 +64,25 @@ class TestContextManagerMixin:
                     checkpoint = now
 
 
-class TestWrapper:
+class TestDecoratorMixin:
 
     @pytest.mark.asyncio
     @pytest.mark.high_rate
-    async def test_wrapper_with_high_rate(self, high_rate):
-        await self._test_wrapper(throttle=Throttle(high_rate), repeat=10)
+    async def test_decorator_with_high_rate(self, high_rate):
+        await self._test_decorator(throttle=Throttle(high_rate), repeat=10)
 
     @pytest.mark.asyncio
     @pytest.mark.mean_rate
-    async def test_wrapper_with_mean_rate(self, mean_rate):
-        await self._test_wrapper(throttle=Throttle(mean_rate), repeat=3)
+    async def test_decorator_with_mean_rate(self, mean_rate):
+        await self._test_decorator(throttle=Throttle(mean_rate), repeat=3)
 
     @pytest.mark.asyncio
     @pytest.mark.low_rate
-    async def test_wrapper_with_low_rate(self, low_rate):
-        await self._test_wrapper(throttle=Throttle(low_rate), repeat=2)
+    async def test_decorator_with_low_rate(self, low_rate):
+        await self._test_decorator(throttle=Throttle(low_rate), repeat=2)
 
     @pytest.mark.asyncio
-    async def _test_wrapper(self, throttle, repeat):
+    async def _test_decorator(self, throttle, repeat):
         checkpoint = time.time() - throttle.period
 
         @throttle

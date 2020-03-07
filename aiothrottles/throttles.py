@@ -45,10 +45,10 @@ class ContextManagerMixin:
         self.release()
 
 
-class WrapperMixin(ContextManagerMixin):
-    """Coroutine wrapper.
+class DecoratorMixin(ContextManagerMixin):
+    """Coroutine decorator.
 
-    This enables wrapping of a coroutine that always need
+    This enables decorating of a coroutine that always need
     acquiring and releasing a throttle:
 
     @throttle('3/s')
@@ -115,7 +115,7 @@ class RateMixin:
         self.rate = rate
 
 
-class Throttle(AwaitableMixin, WrapperMixin, RateMixin):
+class Throttle(AwaitableMixin, DecoratorMixin, RateMixin):
     """Primitive throttle objects.
 
     A primitive throttle is a synchronization primitive that manages
