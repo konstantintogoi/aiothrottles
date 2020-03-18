@@ -19,7 +19,7 @@ aiothrottles
 ============
 
 aiothrottles synchronization primitives are designed to be extension
-(along the time) to asyncio synchronization primitives.
+(along the time) to `asyncio synchronization primitives <https://docs.python.org/3/library/asyncio-sync.html>`__.
 
 aiothrottles has the following basic synchronization primitives:
 
