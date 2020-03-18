@@ -98,7 +98,7 @@ Run all tests.
 
     python setup.py test
 
-Rest test with PyTest.
+Run tests with PyTest.
 
 .. code-block:: shell
 
