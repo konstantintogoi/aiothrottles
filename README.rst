@@ -58,9 +58,12 @@ which is equivalent to:
         throttle.release()
 
 A call rate is determined by the :code:`rate` argument.
-Pass the rate in the format :code:`"{integer limit}/{unit time}"` or
-:code:`"{limit's numerator}/{limit's denominator}{unit time}"`.
-For, example:
+Pass the rate in the following formats:
+
+- :code:`"{integer limit}/{unit time}"`
+- :code:`"{limit's numerator}/{limit's denominator}{unit time}"`.
+
+Examples:
 
 - rates with integer limits
 
