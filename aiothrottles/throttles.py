@@ -15,9 +15,15 @@ class AwaitableMixin:
 
     This enables the idiom:
 
+    .. highlight:: python
+    .. code-block:: python
+
         await throttle
 
     as an alternative to:
+
+    .. highlight:: python
+    .. code-block:: python
 
         await throttle.acquire()
 
@@ -32,6 +38,9 @@ class ContextManagerMixin:
 
     This enables the following idiom for acquiring and releasing a
     throttle around a block:
+
+    .. highlight:: python
+    .. code-block:: python
 
         async with throttle:
             <block>
@@ -51,9 +60,12 @@ class DecoratorMixin(ContextManagerMixin):
     This enables decorating of a coroutine that always need
     acquiring and releasing a throttle:
 
-    @throttle('3/s')
-    async def coroutine():
-        <block>
+    .. highlight:: .python
+    .. code-block:: python
+
+        @throttle('3/s')
+        async def coroutine():
+            <block>
 
     """
 
@@ -70,16 +82,19 @@ class RateMixin:
 
     This enables setting the limiting rate in the following formats:
 
-        - {integer limit}/{unit time}
-        - {limit's numerator}/{limit's denominator}{unit time}
+    - :code:`"{integer limit}/{unit time}"`
+    - :code:`"{limit's numerator}/{limit's denominator}{unit time}"`
 
     Examples:
 
-        - rates with integer limits:
-            - '1/s', '2/m', '3/h', '4/d'
-            - '5/second', '6/minute', '7/hour', '8/day'
-        - rates with rational limits:
-            - '1/3s', '12/37m', '1/5h', '8/3d'
+    - rates with integer limits:
+
+        - :code:`"1/s"`, :code:`"2/m"`, :code:`"3/h"`, :code:`"4/d"`
+        - :code:`"5/second"`, :code:`"6/minute"`, :code:`"7/hour"`, :code:`"8/day"`
+
+    - rates with rational limits:
+
+        - :code:`"1/3s"`, :code:`"12/37m"`, :code:`"1/5h"`, :code:`"8/3d"`
 
     """
 
@@ -142,6 +157,9 @@ class Throttle(AwaitableMixin, DecoratorMixin, RateMixin):
 
     Usage:
 
+    .. highlight:: .python
+    .. code-block:: python
+
         throttle = Throttle()
         ...
         await throttle
@@ -152,12 +170,18 @@ class Throttle(AwaitableMixin, DecoratorMixin, RateMixin):
 
     Context manager usage:
 
+    .. highlight:: .python
+    .. code-block:: python
+
         throttle = Throttle()
         ...
         async with throttle:
             ...
 
     Throttle objects can be tested for locking state:
+
+    .. highlight:: .python
+    .. code-block:: python
 
         if not throttle.locked():
             await throttle
