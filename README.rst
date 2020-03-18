@@ -60,19 +60,12 @@ which is equivalent to:
 A call rate is determined by the :code:`rate` argument.
 Pass the rate in the following formats:
 
-- :code:`"{integer limit}/{unit time}"`
-- :code:`"{limit's numerator}/{limit's denominator}{unit time}"`.
+* :code:`"{integer limit}/{unit time}"`
+    * :code:`4/s`, :code:`5/m`, :code:`6/h`, :code:`7/d`
+    * :code:`1/second`, :code:`2/minute`, :code:`3/hour`, :code:`4/day`
 
-Examples:
-
-- rates with integer limits
-
-    + :code:`4/s`, :code:`5/m`, :code:`6/h`, :code:`7/d`
-    + :code:`1/second`, :code:`2/minute`, :code:`3/hour`, :code:`4/day`
-
-- rates with rational limits
-
-    + :code:`1/3s`, :code:`12/37m`, :code:`1/5h`, :code:`8/3d`
+* :code:`"{limit's numerator}/{limit's denominator}{unit time}"`.
+    * :code:`1/3s`, :code:`12/37m`, :code:`1/5h`, :code:`8/3d`
 
 Installation
 ------------
