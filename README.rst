@@ -1,16 +1,16 @@
-..image:: https://img.shields.io/badge/license-BSD-blue.svg
+.. image:: https://img.shields.io/badge/license-BSD-blue.svg
     :target: https://github.com/KonstantinTogoi/aiothrottles/blob/master/LICENSE
 
-..image:: https://img.shields.io/pypi/v/aiothrottles.svg
+.. image:: https://img.shields.io/pypi/v/aiothrottles.svg
     :target: https://pypi.python.org/pypi/aiothrottles
 
-..image:: https://img.shields.io/pypi/pyversions/aiothrottles.svg
+.. image:: https://img.shields.io/pypi/pyversions/aiothrottles.svg
     :target: https://pypi.python.org/pypi/aiothrottles
 
-..image:: https://img.shields.io/badge/docs-latest-brightgreen.svg
+.. image:: https://img.shields.io/badge/docs-latest-brightgreen.svg
     :target: https://aiothrottles.readthedocs.io/en/latest/
 
-..image:: https://travis-ci.org/KonstantinTogoi/aiothrottles.svg
+.. image:: https://travis-ci.org/KonstantinTogoi/aiothrottles.svg
     :target: https://travis-ci.org/KonstantinTogoi/aiothrottles
 
 .. index-start-marker1
