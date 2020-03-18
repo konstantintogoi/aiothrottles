@@ -15,7 +15,7 @@ Use of :code:`aiothrottles.Throttle` as awaitable object:
     >>>
     >>> async def foo(n):
     ...     print(n, time.time())
-    >>>
+    ...
     >>> for i in range(5):
     ...     await throttle
     ...     await foo(i)
@@ -39,7 +39,7 @@ Use of :code:`aiothrottles.Throttle` as context:
     >>>
     >>> async def foo(n):
     ...     print(n, time.time())
-    >>>
+    ...
     >>> for i in range(5):
     ...     async with throttle:
     ...         await foo(i)
@@ -61,7 +61,7 @@ Use of :code:`aiothrottles.Throttle` as decorator for coroutines:
     >>> @throttle(rate='1/s')
     ... async def foo(n):
     ...     print(n, time.time())
-    >>>
+    ...
     >>> for i in range(5):
     ...     await foo(i)
     ...
