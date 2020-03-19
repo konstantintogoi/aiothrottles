@@ -208,6 +208,13 @@ class Throttle(AwaitableMixin, DecoratorMixin, RateMixin):
             self._trace.popleft()
         return len(self._trace) >= self.limit.numerator or self._value == 0
 
+    def remaining_time(self):
+        """Return the remaining time of the 'locked' state."""
+        if self._trace:
+            return time.time() - self._trace[0]
+        else:
+            return self.limited_interval
+
     async def acquire(self):
         """Acquire a throttle."""
         fut = self._loop.create_future()
@@ -218,7 +225,7 @@ class Throttle(AwaitableMixin, DecoratorMixin, RateMixin):
                 self._value -= 1
                 break
             elif self.locked():
-                delay = self.limited_interval - (time.time() - self._trace[0])
+                delay = self.limited_interval - self.remaining_time()
                 await asyncio.sleep(delay)
             else:
                 for fut in self._waiters:
