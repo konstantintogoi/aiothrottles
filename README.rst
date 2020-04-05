@@ -7,7 +7,7 @@
 .. image:: https://img.shields.io/pypi/pyversions/aiothrottles.svg
     :target: https://pypi.python.org/pypi/aiothrottles
 
-.. image:: https://img.shields.io/badge/docs-latest-brightgreen.svg
+.. image:: https://readthedocs.org/projects/aiothrottles/badge/?version=latest
     :target: https://aiothrottles.readthedocs.io/en/latest/
 
 .. image:: https://travis-ci.org/KonstantinTogoi/aiothrottles.svg
