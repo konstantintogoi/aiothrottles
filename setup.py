@@ -7,10 +7,16 @@ setup(
     author='Konstantin Togoi',
     author_email='konstantin.togoi@protonmail.com',
     url='https://github.com/KonstantinTogoi/aiothrottles',
+    project_urls={'Documentation': 'https://aiothrottles.readthedocs.io'},
+    download_url='https://pypi.org/project/aiothrottles/',
     description='Throttles for Python coroutines.',
     long_description=open('README.rst').read(),
     license='BSD',
     packages=find_packages(),
+    platforms=['Any'],
+    python_requires='>=3.5',
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest', 'pytest-asyncio'],
     keywords=[
         'asyncio synchronization lock semaphore'
         'throttler throttles throttling rate limiting'
@@ -25,8 +31,5 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3 :: Only',
         'Topic :: Software Development :: Libraries :: Python Modules',
-    ],
-    python_requires='>=3.5',
-    setup_requires=['pytest-runner'],
-    tests_require=['pytest', 'pytest-asyncio']
+    ]
 )
