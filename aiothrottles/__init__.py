@@ -1,4 +1,3 @@
-from . import throttles
-from .throttles import throttle, Throttle
-
-__version__ = '0.1.1.post1'
+"""Some imports to make modules and classes available as attributes."""
+from . import throttles  # noqa: F401
+from .throttles import Throttle, throttle  # noqa: F401, WPS458

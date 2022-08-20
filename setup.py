@@ -5,7 +5,7 @@ setup(
     name='aiothrottles',
     version='0.1.1.post1',
     author='Konstantin Togoi',
-    author_email='konstantin.togoi@protonmail.com',
+    author_email='konstantin.togoi@gmail.com',
     url='https://github.com/KonstantinTogoi/aiothrottles',
     project_urls={'Documentation': 'https://aiothrottles.readthedocs.io'},
     download_url='https://pypi.org/project/aiothrottles/',
@@ -14,9 +14,9 @@ setup(
     license='BSD',
     packages=find_packages(),
     platforms=['Any'],
-    python_requires='>=3.5',
-    setup_requires=['pytest-runner'],
-    tests_require=['pytest', 'pytest-asyncio'],
+    python_requires='>=3.6',
+    setup_requires=['pytest-runner==5.3.2'],
+    tests_require=['pytest==6.2.5', 'pytest-asyncio==0.16.0'],
     keywords=[
         'asyncio synchronization lock semaphore'
         'throttler throttles throttling rate limiting'
@@ -25,10 +25,10 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3 :: Only',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ]
