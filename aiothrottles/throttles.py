@@ -133,10 +133,12 @@ class RateMixin:
     """Encapsulation of a rate limiting.
 
     This enables setting the limiting rate in the following formats:
+
     - :code:`"{integer limit}/{unit time}"`
     - :code:`"{limit's numerator}/{limit's denominator}{unit time}"`
 
     Examples of usage:
+
     - :code:`"1/s"`, :code:`"2/m"`, :code:`"3/h"`, :code:`"4/d"`
     - :code:`"5/second"`, :code:`"6/minute"`, :code:`"7/hour"`, :code:`"8/day"`
     - :code:`"1/3s"`, :code:`"12/37m"`, :code:`"1/5h"`, :code:`"8/3d"`

@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'aiothrottles'
-copyright = '2020, Konstantin Togoi'
+copyright = '2022, Konstantin Togoi'
 author = 'Konstantin Togoi'
 
 # The full version, including alpha/beta/rc tags
