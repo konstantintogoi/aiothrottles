@@ -10,9 +10,6 @@
 .. image:: https://readthedocs.org/projects/aiothrottles/badge/?version=latest
     :target: https://aiothrottles.readthedocs.io/en/latest/
 
-.. image:: https://travis-ci.org/KonstantinTogoi/aiothrottles.svg
-    :target: https://travis-ci.org/KonstantinTogoi/aiothrottles
-
 .. index-start-marker1
 
 aiothrottles
