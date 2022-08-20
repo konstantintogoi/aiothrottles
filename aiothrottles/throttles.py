@@ -1,16 +1,44 @@
 """Rate limiting primitives."""
-
-__all__ = ['Throttle', 'throttle']
-
 import asyncio
-import collections
 import fractions
 import functools
 import re
-import time
+from collections import deque
+from time import time
+from typing import Callable, Coroutine, Generator
+
+RATE_MASK = re.compile('([0-9]+)/([0-9]*)([A-Za-z]+)')
+TIME_QUANTITIES = (  # time quantities in the base unit
+    ('s', 1),  # one second, the base unit
+    ('m', 60),  # one minute
+    ('h', 3600),  # one hour
+    ('d', 86400),  # one day
+)
 
 
-class AwaitableMixin:
+class Acquirable:
+    """Acquirable object interface."""
+
+    async def acquire(self) -> None:
+        """Acquire.
+
+        Raises:
+            NotImplementedError: if not implemented
+
+        """
+        raise NotImplementedError()
+
+    def release(self) -> None:
+        """Release.
+
+        Raises:
+            NotImplementedError: if not implemented
+
+        """
+        raise NotImplementedError()
+
+
+class AwaitableMixin(Acquirable):
     """Awaitable object.
 
     This enables the idiom:
@@ -29,11 +57,17 @@ class AwaitableMixin:
 
     """
 
-    def __await__(self):
+    def __await__(self) -> Generator[Coroutine, None, None]:
+        """Make object awaitable.
+
+        Returns:
+            Generator[Coroutine, None, None]
+
+        """
         return self.acquire().__await__()
 
 
-class ContextManagerMixin:
+class ContextManagerMixin(Acquirable):
     """Context manager.
 
     This enables the following idiom for acquiring and releasing a
@@ -47,11 +81,23 @@ class ContextManagerMixin:
 
     """
 
-    async def __aenter__(self):
+    async def __aenter__(self) -> None:
+        """Context entrance."""
         await self.acquire()
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        self.release()
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> object:
+        """Context exit.
+
+        Args:
+            exc_type: exception type
+            exc_val: exception value
+            exc_tb: exception traceback
+
+        Returns:
+            object: can be None
+
+        """
+        return self.release()
 
 
 class DecoratorMixin(ContextManagerMixin):
@@ -69,7 +115,16 @@ class DecoratorMixin(ContextManagerMixin):
 
     """
 
-    def __call__(self, coroutine):
+    def __call__(self, coroutine: Callable):
+        """Make object callable.
+
+        Args:
+            coroutine: coroutine
+
+        Returns:
+            Coroutine
+
+        """
         @functools.wraps(coroutine)
         async def wrapper(*args, **kwargs):
             async with self:
@@ -81,53 +136,80 @@ class RateMixin:
     """Encapsulation of a rate limiting.
 
     This enables setting the limiting rate in the following formats:
-
     - :code:`"{integer limit}/{unit time}"`
     - :code:`"{limit's numerator}/{limit's denominator}{unit time}"`
 
-    Examples:
-
-    - rates with integer limits:
-
-        - :code:`"1/s"`, :code:`"2/m"`, :code:`"3/h"`, :code:`"4/d"`
-        - :code:`"5/second"`, :code:`"6/minute"`, :code:`"7/hour"`, :code:`"8/day"`
-
-    - rates with rational limits:
-
-        - :code:`"1/3s"`, :code:`"12/37m"`, :code:`"1/5h"`, :code:`"8/3d"`
+    Examples of usage:
+    - :code:`"1/s"`, :code:`"2/m"`, :code:`"3/h"`, :code:`"4/d"`
+    - :code:`"5/second"`, :code:`"6/minute"`, :code:`"7/hour"`, :code:`"8/day"`
+    - :code:`"1/3s"`, :code:`"12/37m"`, :code:`"1/5h"`, :code:`"8/3d"`
 
     """
 
-    # time quantities in the base unit
-    TIME_QUANTITIES = {'s': 1, 'm': 60, 'h': 3600, 'd': 86400}
-    RATE_MASK = re.compile(r'([0-9]+)/([0-9]*)([A-Za-z]+)')
+    __slots__ = ('limit', 'limited_interval', 'factor', 'unit_time')
+
+    def __init__(self, rate: str) -> None:
+        """Save rate.
+
+        Args:
+            rate: rate
+
+        """
+        self.rate = rate
 
     @property
-    def rate(self):
+    def rate(self) -> str:
+        """Rate getter.
+
+        Returns:
+            str
+
+        """
         return '{numerator}/{denominator}{unit_time}'.format(
             numerator=self.limit.numerator,
             denominator=self.limit.denominator or '',
-            unit_time=self.unit_time
+            unit_time=self.unit_time,
         )
 
     @rate.setter
-    def rate(self, value):
-        n, d, self.unit_time = self.RATE_MASK.match(value).groups()
-        self.limit = fractions.Fraction(int(n), int(d or 1))
+    def rate(self, ratevalue: str) -> None:
+        """Rate setter.
+
+        Args:
+            ratevalue: rate value
+
+        Raises:
+            ValueError: invalid rate value
+
+        """
+        match = RATE_MASK.match(ratevalue)
+        if match is None:
+            raise ValueError('Invalid rate value')
+
+        numer, denom, unit_time = match.groups()
+        self.unit_time = unit_time
+        self.limit = fractions.Fraction(int(numer), int(denom or 1))
         self.limited_interval = self.limit.denominator * self.time_quantity
 
     @property
-    def time_quantity(self):
-        return self.TIME_QUANTITIES[self.unit_time[0].lower()]
+    def time_quantity(self) -> int:
+        """Quantity of time in base units.
+
+        Returns:
+            int
+
+        """
+        return dict(TIME_QUANTITIES)[self.unit_time[0].lower()]
 
     @property
-    def period(self):
+    def period(self) -> float:
+        """Period duration.
+
+        Returns:
+            float
+
+        """
         return self.limited_interval / self.limit.numerator
-
-    __slots__ = ('limit', 'limited_interval', 'factor', 'unit_time')
-
-    def __init__(self, rate):
-        self.rate = rate
 
 
 class Throttle(AwaitableMixin, DecoratorMixin, RateMixin):
@@ -191,53 +273,75 @@ class Throttle(AwaitableMixin, DecoratorMixin, RateMixin):
 
     """
 
-    __slots__ = ('_loop', '_waiters', '_trace', '_value', '_bound_value')
+    __slots__ = ('_loop', '_waiters', '_trace', '_curvalue', '_bound_value')
 
-    def __init__(self, rate, *, loop=None):
+    def __init__(self, rate, *, loop=None) -> None:
+        """Set helpers.
+
+        Args:
+            rate: rate value
+            loop: event loop
+
+        """
         super().__init__(rate)
         self._loop = loop or asyncio.get_event_loop()
-        self._waiters = collections.deque()
-        self._trace = collections.deque(maxlen=self.limit.numerator)
-        self._value = self.limit.numerator
+        self._waiters: deque = deque()
+        self._trace: deque = deque(maxlen=self.limit.numerator)
+        self._curvalue = self.limit.numerator
         self._bound_value = self.limit.numerator
 
-    def locked(self):
-        """Return True if throttle can not be acquired immediately."""
-        now = time.time()
+    def locked(self) -> bool:
+        """Return True if throttle can not be acquired immediately.
+
+        Returns:
+            bool
+
+        """
+        now = time()
         while self._trace and now - self._trace[0] > self.limited_interval:
             self._trace.popleft()
-        return len(self._trace) >= self.limit.numerator or self._value == 0
+        return len(self._trace) >= self.limit.numerator or self._curvalue == 0
 
-    def remaining_time(self):
-        """Return the remaining time of the 'locked' state."""
+    def remaining_time(self) -> float:
+        """Return the remaining time of the 'locked' state.
+
+        Returns:
+            float
+
+        """
         if self._trace:
-            return time.time() - self._trace[0]
-        else:
-            return self.limited_interval
+            return time() - self._trace[0]
+        return self.limited_interval
 
-    async def acquire(self):
+    async def acquire(self) -> None:  # noqa: WPS231
         """Acquire a throttle."""
         fut = self._loop.create_future()
         self._waiters.append(fut)
+
         while True:
             if fut.done():
                 self._waiters.remove(fut)
-                self._value -= 1
+                self._curvalue -= 1
                 break
             elif self.locked():
                 delay = self.limited_interval - self.remaining_time()
                 await asyncio.sleep(delay)
             else:
-                for fut in self._waiters:
+                for fut in self._waiters:  # noqa: WPS440
                     if not fut.done():
-                        fut.set_result(True)
+                        fut.set_result(True)  # noqa: WPS220
 
-    def release(self):
-        """Release a throttle."""
-        if self._value >= self._bound_value:
+    def release(self) -> None:
+        """Release a throttle.
+
+        Raises:
+            ValueError: when Throttle aleready released
+
+        """
+        if self._curvalue >= self._bound_value:
             raise ValueError('Throttle released too many times.')
-        self._trace.append(time.time())
-        self._value += 1
+        self._trace.append(time())
+        self._curvalue += 1
 
 
 throttle = Throttle
