@@ -15,12 +15,8 @@
 aiothrottles
 ============
 
-aiothrottles synchronization primitives are designed to be extension
-(along the time) to `asyncio synchronization primitives <https://docs.python.org/3/library/asyncio-sync.html>`__.
-
-aiothrottles has the following basic synchronization primitives:
-
-- Throttle
+aiothrottles synchronization primitives are designed to be extension to
+`asyncio synchronization primitives <https://docs.python.org/3/library/asyncio-sync.html>`__.
 
 For more details, see `aiothrottles Documentation <https://aiothrottles.readthedocs.io/>`_.
 
@@ -60,7 +56,7 @@ Pass the rate in the following formats:
 * :code:`"{integer limit}/{unit time}"`
 * :code:`"{limit's numerator}/{limit's denominator}{unit time}"`
 
-Examples:
+:code:`rate` examples:
 
 * :code:`4/s`, :code:`5/m`, :code:`6/h`, :code:`7/d`
 * :code:`1/second`, :code:`2/minute`, :code:`3/hour`, :code:`4/day`
