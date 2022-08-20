@@ -85,7 +85,7 @@ class ContextManagerMixin(Acquirable):
         """Context entrance."""
         await self.acquire()
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb) -> object:
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         """Context exit.
 
         Args:
@@ -93,11 +93,8 @@ class ContextManagerMixin(Acquirable):
             exc_val: exception value
             exc_tb: exception traceback
 
-        Returns:
-            object: can be None
-
         """
-        return self.release()
+        self.release()
 
 
 class DecoratorMixin(ContextManagerMixin):
