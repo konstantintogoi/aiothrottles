@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aiothrottles &mdash; aiothrottles 0.1.1.post1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting Started" href="getting_started.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="#" class="icon icon-home"> aiothrottles
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="throttles.html">throttles</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">aiothrottles</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+      <li>aiothrottles</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="aiothrottles">
+<h1>aiothrottles<a class="headerlink" href="#aiothrottles" title="Permalink to this headline"></a></h1>
+<p>aiothrottles synchronization primitives are designed to be extension
+(along the time) to <a class="reference external" href="https://docs.python.org/3/library/asyncio-sync.html">asyncio synchronization primitives</a>.</p>
+<p>aiothrottles has the following basic synchronization primitives:</p>
+<ul class="simple">
+<li><p>Throttle</p></li>
+</ul>
+<p>For more details, see <a class="reference external" href="https://aiothrottles.readthedocs.io/">aiothrottles Documentation</a>.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h2>
+<p>Throttle implements a rate limiting for asyncio task.
+A throttle can be used to guarantee limited access to a shared resources.</p>
+<p>The preferred way to use a Throttle is an
+<a class="reference external" href="https://docs.python.org/3/reference/compound_stmts.html#async-with">async with</a> statement:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">throttle</span> <span class="o">=</span> <span class="n">Throttle</span><span class="p">(</span><span class="s1">&#39;3/s&#39;</span><span class="p">)</span>
+
+<span class="c1"># ... later</span>
+<span class="k">async</span> <span class="k">with</span> <span class="n">throttle</span><span class="p">:</span>
+    <span class="c1"># access shared state</span>
+</pre></div>
+</div>
+<p>which is equivalent to:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">throttle</span>  <span class="o">=</span> <span class="n">Throttle</span><span class="p">(</span><span class="s1">&#39;3/s&#39;</span><span class="p">)</span>
+
+<span class="c1"># ... later</span>
+<span class="k">await</span> <span class="n">throttle</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># access shared state</span>
+<span class="k">finally</span><span class="p">:</span>
+    <span class="n">throttle</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>A call rate is determined by the <code class="code docutils literal notranslate"><span class="pre">rate</span></code> argument.
+Pass the rate in the following formats:</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">&quot;{integer</span> <span class="pre">limit}/{unit</span> <span class="pre">time}&quot;</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">&quot;{limit's</span> <span class="pre">numerator}/{limit's</span> <span class="pre">denominator}{unit</span> <span class="pre">time}&quot;</span></code></p></li>
+</ul>
+<p>Examples:</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">4/s</span></code>, <code class="code docutils literal notranslate"><span class="pre">5/m</span></code>, <code class="code docutils literal notranslate"><span class="pre">6/h</span></code>, <code class="code docutils literal notranslate"><span class="pre">7/d</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">1/second</span></code>, <code class="code docutils literal notranslate"><span class="pre">2/minute</span></code>, <code class="code docutils literal notranslate"><span class="pre">3/hour</span></code>, <code class="code docutils literal notranslate"><span class="pre">4/day</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">1/3s</span></code>, <code class="code docutils literal notranslate"><span class="pre">12/37m</span></code>, <code class="code docutils literal notranslate"><span class="pre">1/5h</span></code>, <code class="code docutils literal notranslate"><span class="pre">8/3d</span></code></p></li>
+</ul>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install aiothrottles
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python setup.py install
+</pre></div>
+</div>
+</section>
+<section id="supported-python-versions">
+<h2>Supported Python Versions<a class="headerlink" href="#supported-python-versions" title="Permalink to this headline"></a></h2>
+<p>Python 3.6, 3.7, 3.8 and 3.9 are supported.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#installation">Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#awaitable">awaitable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#context-manager">context manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#decorator">decorator</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="throttles.html">throttles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="throttles.html#awaitablemixin">AwaitableMixin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="throttles.html#contextmanagermixin">ContextManagerMixin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="throttles.html#decoratormixin">DecoratorMixin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="throttles.html#ratemixin">RateMixin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="throttles.html#throttle">Throttle</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="getting_started.html" class="btn btn-neutral float-right" title="Getting Started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Konstantin Togoi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
