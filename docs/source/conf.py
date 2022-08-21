@@ -22,7 +22,7 @@ copyright = '2022, Konstantin Togoi'
 author = 'Konstantin Togoi'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.1.post1'
+release = '0.2.0a0'
 
 
 # -- General configuration ---------------------------------------------------

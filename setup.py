@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='aiothrottles',
-    version='0.1.1.post1',
+    version='0.2.0a0',
     author='Konstantin Togoi',
     author_email='konstantin.togoi@gmail.com',
     url='https://github.com/KonstantinTogoi/aiothrottles',
@@ -14,9 +14,9 @@ setup(
     license='BSD',
     packages=find_packages(),
     platforms=['Any'],
-    python_requires='>=3.6',
-    setup_requires=['pytest-runner==5.3.2'],
-    tests_require=['pytest==6.2.5', 'pytest-asyncio==0.16.0'],
+    python_requires='>=3.7',
+    setup_requires=['pytest-runner==6.0.0'],
+    tests_require=['pytest==7.1.2', 'pytest-asyncio==0.19.0'],
     keywords=[
         'asyncio synchronization lock semaphore'
         'throttler throttles throttling rate limiting',
@@ -25,7 +25,6 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
