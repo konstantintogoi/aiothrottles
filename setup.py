@@ -7,7 +7,7 @@ setup(
     author='Konstantin Togoi',
     author_email='konstantin.togoi@gmail.com',
     url='https://github.com/KonstantinTogoi/aiothrottles',
-    project_urls={'Documentation': 'https://aiothrottles.readthedocs.io'},
+    project_urls={'Documentation': 'https://konstantintogoi.github.io/aiothrottles'},
     download_url='https://pypi.org/project/aiothrottles/',
     description='Throttles for Python coroutines.',
     long_description=open('README.rst').read(),  # noqa: WPS515

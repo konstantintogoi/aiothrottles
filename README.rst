@@ -18,7 +18,7 @@ aiothrottles
 aiothrottles synchronization primitives are designed to be extension to
 `asyncio synchronization primitives <https://docs.python.org/3/library/asyncio-sync.html>`__.
 
-For more details, see `aiothrottles Documentation <https://aiothrottles.readthedocs.io/>`_.
+For more details, see `aiothrottles Documentation <https://konstantintogoi.github.io/aiothrottles>`_.
 
 Usage
 -----
