@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='aiothrottles',
-    version='0.2.0b0',
+    version='0.2.0b1',
     author='Konstantin Togoi',
     author_email='konstantin.togoi@gmail.com',
     url='https://github.com/KonstantinTogoi/aiothrottles',

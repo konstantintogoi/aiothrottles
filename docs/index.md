@@ -9,7 +9,7 @@
 
 **Documentation**: [https://konstantintogoi.github.io/aiothrottles](https://konstantintogoi.github.io/aiothrottles)
 
-**Source Code**: [https://github.com/KonstantinTogoi/aiothrottles]()
+**Source Code**: [https://github.com/KonstantinTogoi/aiothrottles](https://github.com/KonstantinTogoi/aiothrottles)
 
 ---
 
